@@ -8,9 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public bool isGameOver = false;
-    public Text turnText; 
-    private int turnCount = 0;
+    public Text turnText;
 
+    private int turnCount = 0;
 
 
     private void Awake()
@@ -38,5 +38,11 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+
+    void addTurnCount()
+    {
+
     }
 }
