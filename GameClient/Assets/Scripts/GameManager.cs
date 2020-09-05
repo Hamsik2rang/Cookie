@@ -1,22 +1,21 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
-
+    public static GameManager instance = null;                             //Singleton Pattern
     public bool isGameOver = false;
     public Text turnText;
-
     private int turnCount = 0;
-
+    private GameObject[] gameOverUI;
 
     private void Awake()
-    {   
-        //싱글턴 구현
-        if(instance == null)
+    {
+
+        if (instance == null)
         {
             instance = this;
         }
@@ -24,25 +23,34 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    //Turn count control method
+    public void AddTurnCount()
     {
-        
+        turnCount++;
+        turnText.text = "Turn " + turnCount;
+    }
+    public void GameOver()
+    {
+        gameOverUI = GameObject.FindGameObjectsWithTag("GameoverUI");
+
+        foreach (GameObject g in gameOverUI)    //Game Over UI Set
+        {
+            g.SetActive(true);
+        }
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene("Intro Scene");
+        }
+
+        //TODO: Get game result and statistics(player both's stat, attack routine, etc..) and parse to JSON
     }
 
-    
-
-    // Update is called once per frame
-    void Update()
+    private void EndGame()  //Only called by Message passing
     {
-        
-    }
-
-
-    void addTurnCount()
-    {
-
+        Application.Quit();
     }
 }
