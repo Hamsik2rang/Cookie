@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         turnCount++;
         turnText.text = "Turn " + turnCount;
     }
+
     public void GameOver()
     {
         gameOverUI = GameObject.FindGameObjectsWithTag("GameoverUI");
