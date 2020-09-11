@@ -7,9 +7,21 @@ public class PlayerController : MonoBehaviour, IController
     Rigidbody playerRigidbody;
     Animator playerAnimator;
     AudioSource playerAudio;
-    Vector3 readyPosition;
-    Vector3 battlePosition;
-    Vector3 normalDirectionVector;
+    public Vector3 readyPosition
+    {
+        get;
+        set;
+    }
+    public Vector3 battlePosition
+    {
+        get;
+        set;
+    }
+    public Vector3 normalDirectionVector
+    {
+        get;
+        private set;
+    }
 
     void Awake()
     {
@@ -17,7 +29,7 @@ public class PlayerController : MonoBehaviour, IController
         playerRigidbody = GetComponent<Rigidbody>();
         playerAudio = GetComponent<AudioSource>();
 
-        normalDirectionVector = new Vector3(0, 0, 1);
+        normalDirectionVector = Vector3.Cross(new Vector3(this.transform.position.x, 0, 0), new Vector3(0, this.transform.position.y, 0));  //외적으로 frontVector 계산
         readyPosition = this.transform.position;
     }
     public void MoveBattlePosition()
@@ -26,6 +38,22 @@ public class PlayerController : MonoBehaviour, IController
     }
 
     public void MoveReadyPosition()
+    {
+        this.transform.position = readyPosition;
+        this.battlePosition = battlePosition;
+    }
+
+    public void PlayAttackAnimation()
+    {
+
+    }
+
+    public void PlayEvadeAnimation()
+    {
+
+    }
+
+    public void PlayDeadAnimation()
     {
 
     }

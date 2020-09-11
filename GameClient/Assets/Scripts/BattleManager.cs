@@ -29,17 +29,24 @@ public class BattleManager : MonoBehaviour
 
         Vector3 distance = player.transform.position - otherPlayer.transform.position;
 
+        //Set Battle Position
         playerBattlePosition = distance + distance.normalized;
+        player.GetComponent<PlayerController>().battlePosition = playerBattlePosition;
         otherPlayerBattlePosition = distance - distance.normalized;
+        otherPlayer.GetComponent<OtherPlayerController>().battlePosition = otherPlayerBattlePosition;
+
+
     }
 
 
     void GetReadyForBattle()
     {
-        BroadcastMessage("MoveReadyPosition");
+
+
     }
 
-	void GoBattlePosition(){
+    void GoBattlePosition()
+    {
         BroadcastMessage("MoveBattlePosition");
     }
 }
