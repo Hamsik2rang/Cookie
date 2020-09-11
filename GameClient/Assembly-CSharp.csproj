@@ -580,6 +580,9 @@
     <Reference Include="Unity.VSCode.Editor">
         <HintPath>C:/Users/IMYONGSIK/git/Cookie/GameClient/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+        <HintPath>C:/Users/ImYongsik/Documents/GitHub/Cookie/GameClient/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
         <HintPath>C:/Users/IMYONGSIK/git/Cookie/GameClient/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -602,7 +605,11 @@
         <HintPath>C:/Users/IMYONGSIK/git/Cookie/GameClient/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
+<<<<<<< Updated upstream
         <HintPath>C:/Users/IMYONGSIK/git/Cookie/GameClient/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+=======
+        <HintPath>C:/Users/ImYongsik/Documents/GitHub/Cookie/GameClient/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+>>>>>>> Stashed changes
     </Reference>
   </ItemGroup>
   <ItemGroup>

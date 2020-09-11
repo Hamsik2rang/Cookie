@@ -8,6 +8,7 @@ public class OtherPlayerController : MonoBehaviour, IController
     Animator otherAnimator;
     AudioSource otherAudio;
 
+<<<<<<< Updated upstream
     public Vector3 battlePosition
     {
         get;
@@ -15,6 +16,8 @@ public class OtherPlayerController : MonoBehaviour, IController
     }
 
 
+    public void MoveBattlePosition()
+=======
     public void MoveBattlePosition()
     {
 
@@ -25,16 +28,43 @@ public class OtherPlayerController : MonoBehaviour, IController
 
     }
 
+    public void GetAttack()
+>>>>>>> Stashed changes
+    {
+
+    }
+
+<<<<<<< Updated upstream
+    public void MoveReadyPosition()
+=======
+    public void GetFirstSkill()
+>>>>>>> Stashed changes
+    {
+
+    }
+
+<<<<<<< Updated upstream
     public void PlayAttackAnimation()
+=======
+    public void GetSecondSkill()
+>>>>>>> Stashed changes
     {
 
     }
 
+<<<<<<< Updated upstream
     public void PlayEvadeAnimation()
+=======
+    public void GetThirdSkill()
+>>>>>>> Stashed changes
     {
 
     }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     public void PlayDeadAnimation()
     {
 

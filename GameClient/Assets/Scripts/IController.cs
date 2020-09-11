@@ -6,8 +6,9 @@ public interface IController
 {
     void MoveBattlePosition();
     void MoveReadyPosition();
-    void PlayAttackAnimation();
-    void PlayEvadeAnimation();
+    void GetAttack();
+    void GetFirstSkill();
+    void GetSecondSkill();
+    void GetThirdSkill();
     void PlayDeadAnimation();
-
 }
