@@ -15,5 +15,4 @@ public class Position
         set;
     }
 
-    Vector3
 }

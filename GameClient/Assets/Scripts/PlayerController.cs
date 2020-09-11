@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour, IController
     Rigidbody playerRigidbody;
     Animator playerAnimator;
     AudioSource playerAudio;
-<<<<<<< Updated upstream
+
     public Vector3 readyPosition
     {
         get;
@@ -23,11 +23,7 @@ public class PlayerController : MonoBehaviour, IController
         get;
         private set;
     }
-=======
-    Vector3 readyPosition;
-    Vector3 battlePosition;
     Vector3 frontNormalVector;
->>>>>>> Stashed changes
 
     void Awake()
     {
@@ -35,14 +31,12 @@ public class PlayerController : MonoBehaviour, IController
         playerRigidbody = GetComponent<Rigidbody>();
         playerAudio = GetComponent<AudioSource>();
 
-<<<<<<< Updated upstream
         normalDirectionVector = Vector3.Cross(new Vector3(this.transform.position.x, 0, 0), new Vector3(0, this.transform.position.y, 0));  //외적으로 frontVector 계산
         readyPosition = this.transform.position;
-=======
+
         frontNormalVector = new Vector3(0, 0, 1);
         readyPosition = this.transform.localPosition;
 
->>>>>>> Stashed changes
     }
     public void MoveBattlePosition()
     {
@@ -90,10 +84,6 @@ public class PlayerController : MonoBehaviour, IController
 
     }
 
-    public void PlayDeadAnimation()
-    {
-
-    }
 
     IEnumerator MovePositionCoroutine(Vector3 start, Vector3 dest)
     {
