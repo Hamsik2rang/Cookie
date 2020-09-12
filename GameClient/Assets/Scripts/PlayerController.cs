@@ -4,26 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IController
 {
-    Rigidbody playerRigidbody;
-    Animator playerAnimator;
-    AudioSource playerAudio;
+    private Rigidbody playerRigidbody;
+    private Animator playerAnimator;
+    private AudioSource playerAudio;
+    private Position worldPos;
 
-    public Vector3 readyPosition
-    {
-        get;
-        set;
-    }
-    public Vector3 battlePosition
-    {
-        get;
-        set;
-    }
+    //법선벡터 == 정면 방향벡터
     public Vector3 normalDirectionVector
     {
         get;
         private set;
     }
-    Vector3 frontNormalVector;
 
     void Awake()
     {
@@ -31,22 +22,21 @@ public class PlayerController : MonoBehaviour, IController
         playerRigidbody = GetComponent<Rigidbody>();
         playerAudio = GetComponent<AudioSource>();
 
-        normalDirectionVector = Vector3.Cross(new Vector3(this.transform.position.x, 0, 0), new Vector3(0, this.transform.position.y, 0));  //외적으로 frontVector 계산
-        readyPosition = this.transform.position;
+        worldPos = new Position();
 
-        frontNormalVector = new Vector3(0, 0, 1);
-        readyPosition = this.transform.localPosition;
-
+        //플레이어의 법선벡터(정면벡터) 계산은 좋은데, 이거 그래서 언제쓸거?
+        normalDirectionVector = Vector3.Cross(new Vector3(this.transform.position.x, 0, 0), new Vector3(0, this.transform.position.y, 0)).normalized;  //외적으로 frontVector 계산
     }
+
     public void MoveBattlePosition()
     {
-        StartCoroutine(MovePositionCoroutine(readyPosition, battlePosition));
+        StartCoroutine(MovePositionCoroutine(worldPos.playerReadyPosition, worldPos.playerBattlePosition));
     }
 
     public void MoveReadyPosition()
     {
-        this.transform.position = readyPosition;
-        this.battlePosition = battlePosition;
+        StartCoroutine(MovePositionCoroutine(this.transform.position, worldPos.playerReadyPosition));
+        //his.transform.position = worldPos.playerReadyPosition;
     }
 
     public void PlayAttackAnimation()
@@ -84,20 +74,27 @@ public class PlayerController : MonoBehaviour, IController
 
     }
 
+    public void GetDamage()
+    {
+
+    }
 
     IEnumerator MovePositionCoroutine(Vector3 start, Vector3 dest)
     {
         playerAnimator.SetFloat("Speed_f", 1.0f);
         playerAnimator.SetBool("Static_b", false);
 
-        for (float i = start.z; i < dest.z; i += Time.deltaTime)
+        Vector3 dirVector = dest - start;
+
+        while (this.transform.position != dest)
         {
-            Vector3 temp = new Vector3(0, 0, i);
-            this.transform.position += temp;
+            this.transform.position = new Vector3(this.transform.position.x + (dirVector.x * Time.deltaTime), this.transform.position.y, this.transform.position.z);
             yield return null;
         }
 
         playerAnimator.SetFloat("Speed_f", 0f);
         playerAnimator.SetBool("Static_b", true);
+
+        BattleManager.instance.playerReady = true;
     }
 }

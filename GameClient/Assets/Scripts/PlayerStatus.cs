@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
-    int strength;
-    int agility;
-    int defence;
-    int vitality;
+    //근력
+    private int strength;
+    //순발력
+    private int agility;
+    //완력
+    private int defence;
+    //체력
+    private int vitality;
 
     int[] skill;
 
@@ -27,6 +31,4 @@ public class PlayerStatus : MonoBehaviour
                 return 0;
         }
     }
-    
-
 }

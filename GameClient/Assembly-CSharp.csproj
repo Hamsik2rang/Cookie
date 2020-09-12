@@ -42,6 +42,7 @@
      <Compile Include="Assets\Scripts\IController.cs" />
      <Compile Include="Assets\Scripts\IntroSceneManager.cs" />
      <Compile Include="Assets\Scripts\OtherPlayerController.cs" />
+     <Compile Include="Assets\Scripts\OtherPlayerStatus.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\PlayerStatus.cs" />
      <Compile Include="Assets\Scripts\Position.cs" />

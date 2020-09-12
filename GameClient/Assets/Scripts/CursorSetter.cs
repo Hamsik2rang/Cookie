@@ -11,19 +11,12 @@ public class CursorSetter : MonoBehaviour
     public Vector2 adjustHotSpot = Vector2.zero;
     public CursorMode cursorMode = CursorMode.Auto;
 
-    // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("loadCursor");
+        StartCoroutine("LoadCursorCoroutine");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    IEnumerator loadCursor()
+    IEnumerator LoadCursorCoroutine()
     {
         yield return new WaitForEndOfFrame();
 
