@@ -12,6 +12,8 @@ public class PlayerStatus : MonoBehaviour
     private int defence;
     //Ã¼·Â
     private int vitality;
+    //hp
+    private int hp;
 
     int[] skill;
 
@@ -27,8 +29,21 @@ public class PlayerStatus : MonoBehaviour
                 return defence;
             else if (index == 3)
                 return vitality;
+            else if (index == 4)
+                return hp;
             else
                 return 0;
         }
+        set
+        {
+            if (index == 4)
+                hp = value;
+        }
     }
+    void Awake()
+    {
+        hp = 20 + 5 * vitality;
+        agility = 10;
+    }
+
 }

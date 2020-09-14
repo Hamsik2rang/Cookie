@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;                             //Singleton Pattern
     public bool isGameOver = false;
     public Text turnText;
-    private int turnCount = 0;
+    private int turnCount = 1;
     private GameObject[] gameOverUI;
 
     private void Awake()

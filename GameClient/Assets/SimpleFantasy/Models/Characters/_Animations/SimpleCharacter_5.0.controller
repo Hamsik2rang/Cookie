@@ -123,6 +123,24 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: AttackTrigger
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: JumpTrigger
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: HealTrigger
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Movement
@@ -1827,6 +1845,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponType_int
     m_EventTreshold: 10
+  - m_ConditionMode: 1
+    m_ConditionEvent: HealTrigger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110206256}
   m_Solo: 0
@@ -2511,6 +2532,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: MeleeType_int
     m_EventTreshold: 2
+  - m_ConditionMode: 1
+    m_ConditionEvent: AttackTrigger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110250170}
   m_Solo: 0
@@ -3354,6 +3378,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: MeleeType_int
     m_EventTreshold: 2
+  - m_ConditionMode: 1
+    m_ConditionEvent: AttackTrigger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110240064}
   m_Solo: 0
@@ -4103,7 +4130,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.34090897
   m_TransitionOffset: 0
   m_ExitTime: 0.9
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 0
   m_InterruptionSource: 1
   m_OrderedInterruption: 1
@@ -5327,7 +5354,7 @@ AnimatorStateTransition:
     m_ConditionEvent: MeleeType_int
     m_EventTreshold: 1
   - m_ConditionMode: 1
-    m_ConditionEvent: Attacked
+    m_ConditionEvent: AttackTrigger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110277130}
@@ -5338,7 +5365,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 0.37012815
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -6137,7 +6164,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.2
   m_TransitionOffset: 0
   m_ExitTime: 0.9
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -6300,6 +6327,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: WeaponType_int
     m_EventTreshold: 10
+  - m_ConditionMode: 1
+    m_ConditionEvent: HealTrigger
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110264428}
   m_Solo: 0
@@ -6918,10 +6948,10 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.000055024782
+  m_TransitionDuration: 0.01078762
   m_TransitionOffset: 0
-  m_ExitTime: 0.999945
-  m_HasExitTime: 0
+  m_ExitTime: 0.33656478
+  m_HasExitTime: 1
   m_HasFixedDuration: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -7135,7 +7165,7 @@ AnimatorStateTransition:
     m_ConditionEvent: MeleeType_int
     m_EventTreshold: 1
   - m_ConditionMode: 1
-    m_ConditionEvent: Attacked
+    m_ConditionEvent: AttackTrigger
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 110269964}
@@ -9953,7 +9983,7 @@ AnimatorStateMachine:
     m_Position: {x: 330, y: -360, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110240064}
-    m_Position: {x: 324, y: -432, z: 0}
+    m_Position: {x: 340, y: -440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110207262}
     m_Position: {x: 216, y: -504, z: 0}
@@ -10293,7 +10323,7 @@ AnimatorStateMachine:
     m_Position: {x: -144, y: -624, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110285788}
-    m_Position: {x: 12, y: -564, z: 0}
+    m_Position: {x: 0, y: -560, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110250170}
     m_Position: {x: 96, y: -624, z: 0}

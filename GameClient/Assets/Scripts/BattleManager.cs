@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public delegate void EventHandler();
-
 public class BattleManager : MonoBehaviour
 {
-    enum BattlePhase { ready, setPlayer, setOtherPlayer, play };
+    enum BattlePhase { ready, setPlayer, setOtherPlayer, go, play };
     enum FirstActor { player, otherPlayer };
+    enum ActNumber { playerAttack, playerSkill_1, playerSkill_2, playerSkill_3, otherAttack, otherSkill_1, otherSkill_2, otherSkill_3 };
 
     public static BattleManager instance = null;
-    public event EventHandler battleChain;
     public bool playerReady;
     public bool otherPlayerReady;
     public bool readyForSet;
+    private bool canNextAction;
 
+    private PlayerStatus playerStatus;
+    private OtherPlayerStatus otherPlayerStatus;
     private BattlePhase battlePhase;
     private FirstActor whoIsFirst;
+    private ActNumber?[] actParam;
 
     void Awake()
     {
@@ -30,124 +32,445 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(this);
         }
+        actParam = new ActNumber?[2];
+
         playerReady = false;
-        otherPlayerReady = true;
-        //파괴 방지
+        otherPlayerReady = false;
+        canNextAction = true;
+        battlePhase = BattlePhase.ready;
+
+        playerStatus = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStatus>();
+        otherPlayerStatus = GameObject.FindGameObjectWithTag("OtherPlayer").GetComponent<OtherPlayerStatus>();
+
         DontDestroyOnLoad(this);
-        //시작하면 캐릭터들 좌표를 준비 포지션으로 이동
-        GetReadyForBattle();
+
+        DecideFirstActor();
     }
 
-    //특정 메서드가 수행되었을 때 변하는 ready값을 기준으로 시퀀스 진행
-    void CheckReady()
+    void Update()
     {
-        //플레이어, 상대 플레이어 둘 다 준비가 안 된 경우?
-        if (!playerReady && !otherPlayerReady)
-        {
-            //플레이어가 act select할 차례
-            if (readyForSet)
-            {
-                SetPlayerAct();
-                //TODO:이후에 호출한 메서드에서 playerReady true로 set해야함
-            }
-            //ReadyPos로 이동을 안 한 경우
-            else
-            {
-                GetReadyForBattle();
-            }
-        }
-        //플레이어만 준비된 경우
-        else if (playerReady && !otherPlayerReady)
-        {
-            //플레이어 set, 상대 플레이어 unset
-            if (readyForSet)
-            {
-                SetOtherPlayerAct();
-            }
-            //상대만 ready pos로 이동 안한 경우
-            else
-            {
+        if (canNextAction)
+            SetNextSequance();
+        // else if (canNextAction && battlePhase > BattlePhase.play)
+        // {
+        //     battlePhase = BattlePhase.ready;
 
-            }
-        }
-        else if (playerReady && otherPlayerReady)
+        // }
+        else if (((battlePhase == BattlePhase.ready) || (battlePhase == BattlePhase.go)) && (playerReady && otherPlayerReady))
         {
-            //플레이어,상대플레이어 둘 다 ready pos로 이동한 경우
-            if (readyForSet)
-            {
-
-            }
-            //플레이어, 상대 플레이어 둘 다 selected act한 경우
-            else
-            {
-                readyForSet = true;
-            }
+            Next();
         }
     }
-    //Battle Scene 준비 메서드. 캐릭터들을 준비 포지션으로 이동시킴
+
+
+    void SetNextSequance()
+    {
+        canNextAction = false;
+
+
+        if (battlePhase == BattlePhase.ready)
+        {
+
+            GetReadyForBattle();
+        }
+
+        else if (battlePhase == BattlePhase.setPlayer)
+        {
+            SetPlayerAct();
+        }
+
+        else if (battlePhase == BattlePhase.setOtherPlayer)
+        {
+            SetOtherPlayerAct();
+        }
+
+        else if (battlePhase == BattlePhase.go)
+        {
+            GoForBattle();
+        }
+        else if (battlePhase == BattlePhase.play)
+        {
+            SetSequence();
+            StartCoroutine("PlaySequenceCoroutine");
+        }
+    }
+
     void GetReadyForBattle()
     {
-        battlePhase = BattlePhase.ready;
-        Debug.Log("GetReady!");
         BroadcastMessage("MoveReadyPosition");
-        CheckReady();
     }
 
-    //플레이어 행동 결정 시작 메서드. 선택 버튼 활성화
+
     void SetPlayerAct()
     {
-        GameObject selectUI = GameObject.Find("SelectButton");
-        selectUI.SetActive(true);
-
-
+        GameObject selectUI;
+        try
+        {
+            selectUI = GameObject.Find("Canvas").transform.Find("SelectImage").gameObject;
+            if (selectUI == null)
+                throw new System.Exception();
+            selectUI.SetActive(true);
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
+
+    void FinishSetting()
+    {
+        GameObject selectUI = GameObject.Find("Canvas").transform.Find("SelectImage").gameObject;
+        selectUI.SetActive(false);
+        Invoke("Next", 2);
+    }
+
 
     void SetOtherPlayerAct()
     {
-
+        GameObject selectUI = GameObject.Find("Canvas").transform.Find("SelectImage").gameObject;
+        selectUI.SetActive(true);
     }
 
-    //선후공 결정 메서드
+
     void DecideFirstActor()
     {
 
-        //플레이어와 상대 플레이어의 Agility를 인덱서로 받아옴
-        int playerAgility = this.transform.GetComponentInChildren<PlayerStatus>()[1];
-        int otherPlayerAgility = this.transform.GetComponentInChildren<OtherPlayerStatus>()[1];
-        //비교한 후에 선후공 결정
+        int playerAgility = playerStatus[1];
+        int otherPlayerAgility = otherPlayerStatus[1];
+
         whoIsFirst = (playerAgility > otherPlayerAgility) ? FirstActor.player : (playerAgility < otherPlayerAgility) ? FirstActor.otherPlayer : (Random.Range(0, 2) == 0) ? FirstActor.player : FirstActor.otherPlayer;
     }
 
-    //전투 순서대로 이벤트 구성
-    void SetPlaySequence()
+    void AddAttackSequence()
     {
-        //선공이 플레이어인 경우
-        if (whoIsFirst == FirstActor.player)
+        if (actParam[0] == null)
         {
-
+            actParam[0] = ActNumber.playerAttack;
         }
-        //선공이 상대 플레이어인 경우
         else
         {
-
+            actParam[1] = ActNumber.otherAttack;
         }
     }
 
-    //전투 시작 메서드. 캐릭터들을 전투 포지션으로 이동시킴
+    void AddFirstSkillSequence()
+    {
+        if (actParam[0] == null)
+        {
+            actParam[0] = ActNumber.playerSkill_1;
+        }
+        else
+        {
+            actParam[1] = ActNumber.otherSkill_1;
+        }
+    }
+
+    void AddSecondSkillSequence()
+    {
+        if (actParam[0] == null)
+        {
+            actParam[0] = ActNumber.playerSkill_2;
+        }
+        else
+        {
+            actParam[1] = ActNumber.otherSkill_2;
+        }
+    }
+
+    void AddThirdSkillSequence()
+    {
+        if (actParam[0] == null)
+        {
+            actParam[0] = ActNumber.playerSkill_3;
+        }
+        else
+        {
+            actParam[1] = ActNumber.otherSkill_3;
+        }
+    }
+
+
+    void SetSequence()
+    {
+        if (whoIsFirst == FirstActor.otherPlayer)
+        {
+            ActNumber? temp = actParam[0];
+            actParam[0] = actParam[1];
+            actParam[1] = temp;
+        }
+    }
+
     void GoForBattle()
     {
         BroadcastMessage("MoveBattlePosition");
     }
 
+    public void Next()
+    {
+        canNextAction = true;
+        playerReady = false;
+        otherPlayerReady = false;
+        battlePhase++;
+        if (battlePhase > BattlePhase.play)
+            battlePhase = BattlePhase.ready;
+    }
 
+    void PlayerAttack()
+    {
+        StartCoroutine("PlayerAttackCoroutine");
+    }
 
+    void PlayerFirstSkill()
+    {
+        StartCoroutine("PlayerFirstSkillCoroutine");
+    }
 
-    //턴 종료 메서드
+    void PlayerSecondSkill()
+    {
+        StartCoroutine("PlayerSecondSkillCoroutine");
+    }
+    void PlayerThirdSkill()
+    {
+        StartCoroutine("PlayerThirdSkillCoroutine");
+    }
+    void OtherAttack()
+    {
+        StartCoroutine("OtherAttackCoroutine");
+    }
+    void OtherFirstSkill()
+    {
+        StartCoroutine("OtherFirstSkillCoroutine");
+    }
+    void OtherSecondSkill()
+    {
+        StartCoroutine("OtherSecondSkillCoroutine");
+    }
+    void OtherThirdSkill()
+    {
+        StartCoroutine("OtherThridSkillCoroutine");
+    }
+
     void EndTurn()
     {
-        //턴 카운트 1 증가
         GameManager.instance.AddTurnCount();
-        //다음 턴 준비
         GetReadyForBattle();
+    }
+
+    IEnumerator PlayerAttackCoroutine()
+    {
+        BroadcastMessage("PlayerAttackAnimation");
+        bool canEvade = false;
+
+        if (otherPlayerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+        if (canEvade)
+        {
+            BroadcastMessage("OtherEvadeAnimation");
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("OtherHitAnimation");
+        }
+
+        int damage = (int)(0.9f * (playerStatus[0] - otherPlayerStatus[2]) - (0.5f * otherPlayerStatus[2]) + 10 + Random.Range(-3, 4));
+        otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+
+    }
+
+    IEnumerator PlayerFirstSkillCoroutine()
+    {
+        BroadcastMessage("PlayerFirstSkillAnimation");
+        bool canEvade = false;
+        if (otherPlayerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+        if (canEvade)
+        {
+            BroadcastMessage("OtherEvadeAnimation");
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("OtherHitAnimation");
+        }
+
+        int damage = (int)(1.2 * playerStatus[0] + 10 + Random.Range(-3, 4));
+        otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+    }
+
+    IEnumerator PlayerSecondSkillCoroutine()
+    {
+        BroadcastMessage("PlayerAttackAnimation");
+        bool canEvade = false;
+        if (otherPlayerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+
+        if (canEvade)
+        {
+            BroadcastMessage("OtherEvadeAnimation");
+            yield return new WaitForSeconds(0.2f);
+            BroadcastMessage("PlayerSecondSkillAnimation");
+            yield return new WaitForSeconds(0.2f);
+            BroadcastMessage("OtherHitAnimation");
+            int damage = playerStatus[0] + 12;
+            otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("OtherHitAnimation");
+            int damage = (int)(0.5 * playerStatus[0] + 1);
+            otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+        }
+    }
+
+    IEnumerator PlayerThirdSkillCoroutine()
+    {
+        BroadcastMessage("PlayerThirdSkillAnimation");
+        yield return new WaitForSeconds(0.2f);
+        int lostHp = 20 + playerStatus[3] - playerStatus[4];
+        playerStatus[4] += (int)((0.4f * lostHp) + (0.7f * playerStatus[3]));
+    }
+
+    IEnumerator OtherAttackCoroutine()
+    {
+        BroadcastMessage("OtherAttackAnimation");
+        bool canEvade = false;
+
+        if (playerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+        if (canEvade)
+        {
+            BroadcastMessage("PlayerEvadeAnimation");
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("PlayerHitAnimation");
+        }
+
+        int damage = (int)(0.9f * (otherPlayerStatus[0] - playerStatus[2]) - (0.5f * playerStatus[2]) + 10 + Random.Range(-3, 4));
+        playerStatus[4] = playerStatus[4] - damage;
+    }
+
+    IEnumerator OtherFirstSkillCoroutine()
+    {
+        BroadcastMessage("OtherFirstSkillAnimation");
+        bool canEvade = false;
+        if (otherPlayerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+        if (canEvade)
+        {
+            BroadcastMessage("PlayerEvadeAnimation");
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("PlayerHitAnimation");
+        }
+
+        int damage = (int)(1.2 * otherPlayerStatus[0] + 10 + Random.Range(-3, 4));
+        playerStatus[4] = playerStatus[4] - damage;
+    }
+
+    IEnumerator OtherSecondSkillCoroutine()
+    {
+        BroadcastMessage("OtherAttackAnimation");
+        bool canEvade = false;
+        if (playerStatus[1] * 7 >= Random.Range(0, 101))
+        {
+            canEvade = true;
+        }
+
+        if (canEvade)
+        {
+            BroadcastMessage("PlayerEvadeAnimation");
+            yield return new WaitForSeconds(0.2f);
+            BroadcastMessage("OtherSecondSkillAnimation");
+            yield return new WaitForSeconds(0.2f);
+            BroadcastMessage("playerHitAnimation");
+            int damage = otherPlayerStatus[0] + 12;
+            playerStatus[4] = playerStatus[4] - damage;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (!canEvade)
+        {
+            BroadcastMessage("PlayerHitAnimation");
+            int damage = (int)(0.5 * otherPlayerStatus[0] + 1);
+            playerStatus[4] = playerStatus[4] - damage;
+        }
+    }
+
+    IEnumerator OtherThridSkillCoroutine()
+    {
+        BroadcastMessage("OtherThirdSkillAnimation");
+        yield return new WaitForSeconds(0.2f);
+        int lostHp = 20 + otherPlayerStatus[3] - otherPlayerStatus[4];
+        otherPlayerStatus[4] += (int)((0.4f * lostHp) + (0.7f * otherPlayerStatus[3]));
+
+    }
+
+    IEnumerator PlaySequenceCoroutine()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            switch (actParam[i])
+            {
+                case ActNumber.playerAttack:
+                    PlayerAttack();
+                    break;
+                case ActNumber.playerSkill_1:
+                    PlayerFirstSkill();
+                    break;
+                case ActNumber.playerSkill_2:
+                    PlayerSecondSkill();
+                    break;
+                case ActNumber.playerSkill_3:
+                    PlayerThirdSkill();
+                    break;
+                case ActNumber.otherAttack:
+                    OtherAttack();
+                    break;
+                case ActNumber.otherSkill_1:
+                    OtherFirstSkill();
+                    break;
+                case ActNumber.otherSkill_2:
+                    OtherSecondSkill();
+                    break;
+                case ActNumber.otherSkill_3:
+                    OtherThirdSkill();
+                    break;
+                default:
+                    break;
+            }
+            actParam[i] = null;
+
+            yield return new WaitForSeconds(2.0f);
+        }
+
+        Next();
+        EndTurn();
     }
 }
