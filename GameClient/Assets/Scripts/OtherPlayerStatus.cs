@@ -13,7 +13,7 @@ public class OtherPlayerStatus : MonoBehaviour
     //체력
     private int vitality;
     //hp
-    private int hp;
+    public int hp;
 
     int[] skill;
 
@@ -36,14 +36,41 @@ public class OtherPlayerStatus : MonoBehaviour
         }
         set
         {
-            if (index == 4)
+            if (index == 0)
+                strength = value;
+            else if (index == 1)
+                agility = value;
+            else if (index == 2)
+                defence = value;
+            else if (index == 3)
+                vitality = value;
+            else if (index == 4)
                 hp = value;
         }
     }
 
     void Awake()
     {
+        RandomStat();
         hp = 20 + 5 * vitality;
-        agility = 10;
+        Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
+
+    }
+
+    void RandomStat()
+    {
+        int point = 25;
+
+        while (point > 0)
+        {
+            int rand = Random.Range(0, 4);
+            if (this[rand] < 10)
+            {
+                this[rand]++;
+                point--;
+            }
+            else
+                continue;
+        }
     }
 }
