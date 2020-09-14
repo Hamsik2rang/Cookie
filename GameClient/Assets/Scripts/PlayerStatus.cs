@@ -16,7 +16,7 @@ public class PlayerStatus : MonoBehaviour
     private int hp;
 
     int[] skill;
-
+    
     public int this[int index]
     {
         get
@@ -36,14 +36,30 @@ public class PlayerStatus : MonoBehaviour
         }
         set
         {
-            if (index == 4)
+            if (index == 0)
+                strength = value;
+            else if (index == 1)
+                agility = value;
+            else if (index == 2)
+                defence = value;
+            else if (index == 3)
+                vitality = value;
+            else if (index == 4)
                 hp = value;
         }
     }
     void Awake()
     {
+        StatManager statManager = GameObject.Find("StatManager").GetComponent<StatManager>();
+
+        for(int i=0;i<4;i++)
+        {
+            this[i] = statManager.stat[i];
+        }
+
+        Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
+
         hp = 20 + 5 * vitality;
-        agility = 10;
     }
 
 }

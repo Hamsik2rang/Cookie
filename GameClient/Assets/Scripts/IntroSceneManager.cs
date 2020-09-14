@@ -2,22 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class IntroSceneManager : MonoBehaviour
 {
-    private int remainPoint = 25;
-    public Text remainText;
-
-
-    // Start is called before the first frame update
-    void Start()
+    public void Load_BattleScene()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        SceneManager.LoadScene("BattleScene");
     }
 }
