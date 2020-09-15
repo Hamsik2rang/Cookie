@@ -20,14 +20,16 @@ public class PlayerController : MonoBehaviour, IController
         worldPos = new Position();
     }
 
-    void FixedUpdate()
-    {
-        if (this.transform.position.y < -2)
-            this.transform.position = new Vector3(this.transform.position.x, -2f, this.transform.position.z);
-    }
+    // void FixedUpdate()
+    // {
+    //     if (this.transform.position.y < 0)
+    //         this.transform.position = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
+    // }
 
     void OnCollisionEnter(Collision collider)
     {
+
+        this.transform.position = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
         playerRigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
@@ -57,6 +59,7 @@ public class PlayerController : MonoBehaviour, IController
 
     public void PlayerSecondSkillAnimation()
     {
+        StopCoroutine("PlayerAttackAnimation");
         PlayerFirstSkillAnimation();
         playerRigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         playerRigidbody.AddForce(new Vector3(5f, 5f, 0f), ForceMode.Impulse);
@@ -83,6 +86,8 @@ public class PlayerController : MonoBehaviour, IController
         playerAnimator.SetBool("Crouch_b", true);
         playerAnimator.SetBool("Death_b", true);
         playerAnimator.SetInteger("DeathType_int", 2);
+
+        GameManager.instance.isGameOver = true;
     }
 
     IEnumerator MovePositionCoroutine(Vector3 dest)
@@ -114,18 +119,18 @@ public class PlayerController : MonoBehaviour, IController
         playerAnimator.SetFloat("Speed_f", 0f);
         playerAnimator.SetBool("Static_b", true);
 
+        yield return new WaitForSeconds(0.2f);
+
         BattleManager.instance.playerReady = true;
     }
 
     IEnumerator EvadeAnimationCoroutine()
     {
         playerRigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        playerRigidbody.AddForce(new Vector3(-5f, 5f, 0f), ForceMode.Impulse);
+        playerRigidbody.AddForce(new Vector3(0f, 5f, 0f), ForceMode.Impulse);
         playerAnimator.SetTrigger("JumpTrigger");
 
         yield return new WaitForSeconds(2f);
-
-        StartCoroutine(MovePositionCoroutine(worldPos.playerBattlePosition));
     }
 
     IEnumerator HitAnimationCoroutine()

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
+    private Slider healthCircle;
     //근력
     private int strength;
     //순발력
@@ -16,7 +18,7 @@ public class PlayerStatus : MonoBehaviour
     private int hp;
 
     int[] skill;
-    
+
     public int this[int index]
     {
         get
@@ -52,7 +54,7 @@ public class PlayerStatus : MonoBehaviour
     {
         StatManager statManager = GameObject.Find("StatManager").GetComponent<StatManager>();
 
-        for(int i=0;i<4;i++)
+        for (int i = 0; i < 4; i++)
         {
             this[i] = statManager.stat[i];
         }
@@ -60,6 +62,31 @@ public class PlayerStatus : MonoBehaviour
         Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
 
         hp = 20 + 5 * vitality;
+
+        healthCircle = GetComponentInChildren<Slider>();
+
+        healthCircle.maxValue = hp;
+        healthCircle.value = hp;
+    }
+
+    public void PlayerDamaged(int damage)
+    {
+        hp -= damage;
+        healthCircle.value = hp;
+        Debug.Log(hp);
+        if (hp <= 0)
+        {
+            PlayerDead();
+        }
+        else if (hp > healthCircle.maxValue)
+        {
+            hp = (int)healthCircle.maxValue;
+        }
+    }
+
+    void PlayerDead()
+    {
+        SendMessage("PlayDeadAnimation");
     }
 
 }

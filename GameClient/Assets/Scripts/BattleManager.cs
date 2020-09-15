@@ -265,20 +265,19 @@ public class BattleManager : MonoBehaviour
         {
             canEvade = true;
         }
+
+        yield return new WaitForSeconds(0.4f);
+
         if (canEvade)
         {
             BroadcastMessage("OtherEvadeAnimation");
         }
-
-        yield return new WaitForSeconds(0.2f);
-
-        if (!canEvade)
+        else
         {
             BroadcastMessage("OtherHitAnimation");
+            int damage = (int)(0.9f * (playerStatus[0] - otherPlayerStatus[2]) - (0.5f * otherPlayerStatus[2]) + 10 + Random.Range(-3, 4));
+            otherPlayerStatus.OtherPlayerDamaged(damage);
         }
-
-        int damage = (int)(0.9f * (playerStatus[0] - otherPlayerStatus[2]) - (0.5f * otherPlayerStatus[2]) + 10 + Random.Range(-3, 4));
-        otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
 
     }
 
@@ -300,12 +299,10 @@ public class BattleManager : MonoBehaviour
         if (!canEvade)
         {
             BroadcastMessage("OtherHitAnimation");
+            int damage = (int)(1.2 * playerStatus[0] + 10 + Random.Range(-3, 4));
+            otherPlayerStatus.OtherPlayerDamaged(damage);
         }
-
-        int damage = (int)(1.2 * playerStatus[0] + 10 + Random.Range(-3, 4));
-        otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
     }
-
     IEnumerator PlayerSecondSkillCoroutine()
     {
         BroadcastMessage("PlayerAttackAnimation");
@@ -323,7 +320,7 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             BroadcastMessage("OtherHitAnimation");
             int damage = playerStatus[0] + 12;
-            otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+            otherPlayerStatus.OtherPlayerDamaged(damage);
         }
 
         yield return new WaitForSeconds(0.2f);
@@ -332,7 +329,7 @@ public class BattleManager : MonoBehaviour
         {
             BroadcastMessage("OtherHitAnimation");
             int damage = (int)(0.5 * playerStatus[0] + 1);
-            otherPlayerStatus[4] = otherPlayerStatus[4] - damage;
+            otherPlayerStatus.OtherPlayerDamaged(damage);
         }
     }
 
@@ -341,7 +338,9 @@ public class BattleManager : MonoBehaviour
         BroadcastMessage("PlayerThirdSkillAnimation");
         yield return new WaitForSeconds(0.2f);
         int lostHp = 20 + playerStatus[3] - playerStatus[4];
-        playerStatus[4] += (int)((0.4f * lostHp) + (0.7f * playerStatus[3]));
+        int heal = (int)((0.4f * lostHp) + (0.7f * playerStatus[3]));
+        heal *= -1;
+        playerStatus.PlayerDamaged(heal);
     }
 
     IEnumerator OtherAttackCoroutine()
@@ -353,20 +352,20 @@ public class BattleManager : MonoBehaviour
         {
             canEvade = true;
         }
+
+        yield return new WaitForSeconds(0.4f);
+
         if (canEvade)
         {
             BroadcastMessage("PlayerEvadeAnimation");
         }
 
-        yield return new WaitForSeconds(0.2f);
-
-        if (!canEvade)
+        else
         {
             BroadcastMessage("PlayerHitAnimation");
+            int damage = (int)(0.9f * (otherPlayerStatus[0] - playerStatus[2]) - (0.5f * playerStatus[2]) + 10 + Random.Range(-3, 4));
+            playerStatus.PlayerDamaged(damage);
         }
-
-        int damage = (int)(0.9f * (otherPlayerStatus[0] - playerStatus[2]) - (0.5f * playerStatus[2]) + 10 + Random.Range(-3, 4));
-        playerStatus[4] = playerStatus[4] - damage;
     }
 
     IEnumerator OtherFirstSkillCoroutine()
@@ -387,10 +386,9 @@ public class BattleManager : MonoBehaviour
         if (!canEvade)
         {
             BroadcastMessage("PlayerHitAnimation");
+            int damage = (int)(1.2 * otherPlayerStatus[0] + 10 + Random.Range(-3, 4));
+            playerStatus.PlayerDamaged(damage);
         }
-
-        int damage = (int)(1.2 * otherPlayerStatus[0] + 10 + Random.Range(-3, 4));
-        playerStatus[4] = playerStatus[4] - damage;
     }
 
     IEnumerator OtherSecondSkillCoroutine()
@@ -408,9 +406,9 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             BroadcastMessage("OtherSecondSkillAnimation");
             yield return new WaitForSeconds(0.2f);
-            BroadcastMessage("playerHitAnimation");
+            BroadcastMessage("PlayerHitAnimation");
             int damage = otherPlayerStatus[0] + 12;
-            playerStatus[4] = playerStatus[4] - damage;
+            playerStatus.PlayerDamaged(damage);
         }
 
         yield return new WaitForSeconds(0.2f);
@@ -419,7 +417,7 @@ public class BattleManager : MonoBehaviour
         {
             BroadcastMessage("PlayerHitAnimation");
             int damage = (int)(0.5 * otherPlayerStatus[0] + 1);
-            playerStatus[4] = playerStatus[4] - damage;
+            playerStatus.PlayerDamaged(damage);
         }
     }
 
@@ -428,8 +426,9 @@ public class BattleManager : MonoBehaviour
         BroadcastMessage("OtherThirdSkillAnimation");
         yield return new WaitForSeconds(0.2f);
         int lostHp = 20 + otherPlayerStatus[3] - otherPlayerStatus[4];
-        otherPlayerStatus[4] += (int)((0.4f * lostHp) + (0.7f * otherPlayerStatus[3]));
-
+        int heal = (int)((0.4f * lostHp) + (0.7f * otherPlayerStatus[3]));
+        heal *= -1;
+        otherPlayerStatus.OtherPlayerDamaged(heal);
     }
 
     IEnumerator PlaySequenceCoroutine()

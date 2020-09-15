@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OtherPlayerStatus : MonoBehaviour
 {
+    private Slider healthCircle;
     //근력
     private int strength;
     //순발력
@@ -55,6 +57,10 @@ public class OtherPlayerStatus : MonoBehaviour
         hp = 20 + 5 * vitality;
         Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
 
+        healthCircle = GetComponentInChildren<Slider>();
+
+        healthCircle.maxValue = hp;
+        healthCircle.value = hp;
     }
 
     void RandomStat()
@@ -72,5 +78,25 @@ public class OtherPlayerStatus : MonoBehaviour
             else
                 continue;
         }
+    }
+
+    public void OtherPlayerDamaged(int damage)
+    {
+        hp -= damage;
+        healthCircle.value = hp;
+        Debug.Log(hp);
+        if (hp <= 0)
+        {
+            OtherPlayerDead();
+        }
+        else if (hp > healthCircle.maxValue)
+        {
+            hp = (int)healthCircle.maxValue;
+        }
+    }
+
+    void OtherPlayerDead()
+    {
+        SendMessage("PlayDeadAnimation");
     }
 }

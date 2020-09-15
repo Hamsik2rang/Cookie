@@ -26,6 +26,14 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    void Update()
+    {
+        if (isGameOver)
+        {
+            GameOver();
+        }
+    }
+
     //Turn count control method
     public void AddTurnCount()
     {
