@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerStatus : MonoBehaviour
 {
+    //마우스 겹칠 시 출력할 스탯 인포 이미지
+    private GameObject infoImage;
+
     private Slider healthCircle;
     //근력
     private int strength;
@@ -67,6 +70,17 @@ public class PlayerStatus : MonoBehaviour
 
         healthCircle.maxValue = hp;
         healthCircle.value = hp;
+
+    }
+
+    void OnMouseEnter()
+    {
+
+    }
+
+    void OnMouseExit()
+    {
+
     }
 
     public void PlayerDamaged(int damage)
@@ -87,6 +101,13 @@ public class PlayerStatus : MonoBehaviour
     void PlayerDead()
     {
         SendMessage("PlayDeadAnimation");
+    }
+
+
+
+    void PrintPlayerInfo()
+    {
+
     }
 
 }

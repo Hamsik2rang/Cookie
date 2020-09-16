@@ -40,6 +40,7 @@
      <Compile Include="Assets\Scripts\CursorSetter.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\IController.cs" />
+     <Compile Include="Assets\Scripts\InfoLoader.cs" />
      <Compile Include="Assets\Scripts\IntroSceneManager.cs" />
      <Compile Include="Assets\Scripts\OtherPlayerController.cs" />
      <Compile Include="Assets\Scripts\OtherPlayerStatus.cs" />
