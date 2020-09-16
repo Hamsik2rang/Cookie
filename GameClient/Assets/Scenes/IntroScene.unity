@@ -154,7 +154,12 @@ MonoBehaviour:
   agl: {fileID: 506451666}
   def: {fileID: 821240433}
   vit: {fileID: 977975808}
+  skillText:
+  - {fileID: 1894140704}
+  - {fileID: 1068333608}
+  - {fileID: 522741046}
   stat: 00000000000000000000000000000000
+  skillStat: 000000000000000000000000
 --- !u!4 &64993822
 Transform:
   m_ObjectHideFlags: 0
