@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerStatus : MonoBehaviour
+public class PlayerStatus : MonoBehaviour, IStatus
 {
     private Slider healthCircle;
     //±Ù·Â
@@ -17,7 +17,7 @@ public class PlayerStatus : MonoBehaviour
     //hp
     private int hp;
 
-    int[] skill;
+    private int[] skill;
 
     public int this[int index]
     {
@@ -33,8 +33,14 @@ public class PlayerStatus : MonoBehaviour
                 return vitality;
             else if (index == 4)
                 return hp;
+            else if (index == 5)
+                return skill[0];
+            else if (index == 6)
+                return skill[1];
+            else if (index == 7)
+                return skill[2];
             else
-                return 0;
+                return -1;
         }
         set
         {
@@ -48,18 +54,29 @@ public class PlayerStatus : MonoBehaviour
                 vitality = value;
             else if (index == 4)
                 hp = value;
+            else if (index == 5)
+                skill[0] = value;
+            else if (index == 6)
+                skill[1] = value;
+            else if (index == 7)
+                skill[2] = value;
         }
     }
     void Awake()
     {
+        skill = new int[3];
         StatManager statManager = GameObject.Find("StatManager").GetComponent<StatManager>();
 
         for (int i = 0; i < 4; i++)
         {
             this[i] = statManager.stat[i];
         }
+        for (int i = 0; i < statManager.skillStat.Length; i++)
+        {
+            this[i + 5] = statManager.skillStat[i];
+        }
 
-        Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
+        Debug.Log("player : " + this[0] + " " + this[1] + " " + this[2] + " " + this[3] + "//" + this[5] + " " + this[6] + " " + this[7]);
 
         hp = 20 + 5 * vitality;
 
@@ -67,6 +84,17 @@ public class PlayerStatus : MonoBehaviour
 
         healthCircle.maxValue = hp;
         healthCircle.value = hp;
+
+    }
+
+    void OnMouseEnter()
+    {
+        InfoLoader.instance.PrintInfo(this, this[0], this[1], this[2], this[3]);
+    }
+
+    void OnMouseExit()
+    {
+        InfoLoader.instance.PrintInfo(null);
     }
 
     public void PlayerDamaged(int damage)
@@ -87,6 +115,16 @@ public class PlayerStatus : MonoBehaviour
     void PlayerDead()
     {
         SendMessage("PlayDeadAnimation");
+    }
+
+    public int GetHP()
+    {
+        return this[4];
+    }
+
+    public int GetMaxHP()
+    {
+        return (int)healthCircle.maxValue;
     }
 
 }

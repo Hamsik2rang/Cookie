@@ -79,13 +79,14 @@ public class PlayerController : MonoBehaviour, IController
     }
     public void PlayerHitAnimation()
     {
-        StartCoroutine("HitAnimationCoroutine");
+        playerAnimator.SetTrigger("CrouchTrigger");
     }
     public void PlayDeadAnimation()
     {
-        playerAnimator.SetBool("Crouch_b", true);
         playerAnimator.SetBool("Death_b", true);
         playerAnimator.SetInteger("DeathType_int", 2);
+
+        playerAnimator.SetTrigger("CrouchTrigger");
 
         GameManager.instance.isGameOver = true;
     }
@@ -132,15 +133,4 @@ public class PlayerController : MonoBehaviour, IController
 
         yield return new WaitForSeconds(2f);
     }
-
-    IEnumerator HitAnimationCoroutine()
-    {
-        playerAnimator.SetBool("Crouch_b", true);
-
-        yield return new WaitForSeconds(0.2f);
-
-        playerAnimator.SetBool("Crouch_b", false);
-    }
-
-
 }

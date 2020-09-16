@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OtherPlayerStatus : MonoBehaviour
+public class OtherPlayerStatus : MonoBehaviour, IStatus
 {
     private Slider healthCircle;
     //근력
@@ -15,7 +15,7 @@ public class OtherPlayerStatus : MonoBehaviour
     //체력
     private int vitality;
     //hp
-    public int hp;
+    private int hp;
 
     int[] skill;
 
@@ -33,8 +33,14 @@ public class OtherPlayerStatus : MonoBehaviour
                 return vitality;
             else if (index == 4)
                 return hp;
+            else if (index == 5)
+                return skill[0];
+            else if (index == 6)
+                return skill[1];
+            else if (index == 7)
+                return skill[2];
             else
-                return 0;
+                return -1;
         }
         set
         {
@@ -48,14 +54,22 @@ public class OtherPlayerStatus : MonoBehaviour
                 vitality = value;
             else if (index == 4)
                 hp = value;
+            else if (index == 5)
+                skill[0] = value;
+            else if (index == 6)
+                skill[1] = value;
+            else if (index == 7)
+                skill[2] = value;
         }
     }
 
     void Awake()
     {
+        skill = new int[3];
         RandomStat();
         hp = 20 + 5 * vitality;
-        Debug.Log(this[0] + " " + this[1] + " " + this[2] + " " + this[3]);
+
+        Debug.Log("other : " + this[0] + " " + this[1] + " " + this[2] + " " + this[3] + "//" + this[5] + " " + this[6] + " " + this[7]);
 
         healthCircle = GetComponentInChildren<Slider>();
 
@@ -63,9 +77,19 @@ public class OtherPlayerStatus : MonoBehaviour
         healthCircle.value = hp;
     }
 
+    void OnMouseEnter()
+    {
+        InfoLoader.instance.PrintInfo(this, this[0], this[1], this[2], this[3]);
+    }
+
+    void OnMouseExit()
+    {
+        InfoLoader.instance.PrintInfo(null);
+    }
+
     void RandomStat()
     {
-        int point = 25;
+        int point = 25, skillPoint = 5;
 
         while (point > 0)
         {
@@ -74,6 +98,17 @@ public class OtherPlayerStatus : MonoBehaviour
             {
                 this[rand]++;
                 point--;
+            }
+            else
+                continue;
+        }
+        while (skillPoint > 0)
+        {
+            int rand = Random.Range(5, 8);
+            if (this[rand] < 3)
+            {
+                this[rand]++;
+                skillPoint--;
             }
             else
                 continue;
@@ -98,5 +133,15 @@ public class OtherPlayerStatus : MonoBehaviour
     void OtherPlayerDead()
     {
         SendMessage("PlayDeadAnimation");
+    }
+
+    public int GetHP()
+    {
+        return this[4];
+    }
+
+    public int GetMaxHP()
+    {
+        return (int)healthCircle.maxValue;
     }
 }

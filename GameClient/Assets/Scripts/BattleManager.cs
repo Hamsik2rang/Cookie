@@ -275,7 +275,7 @@ public class BattleManager : MonoBehaviour
         else
         {
             BroadcastMessage("OtherHitAnimation");
-            int damage = (int)(0.9f * (playerStatus[0] - otherPlayerStatus[2]) - (0.5f * otherPlayerStatus[2]) + 10 + Random.Range(-3, 4));
+            int damage = (int)(0.9f * (playerStatus[0] - otherPlayerStatus[2]) - (0.5f * otherPlayerStatus[2]) + 10 + Random.Range(0, 4));
             otherPlayerStatus.OtherPlayerDamaged(damage);
         }
 
@@ -299,7 +299,7 @@ public class BattleManager : MonoBehaviour
         if (!canEvade)
         {
             BroadcastMessage("OtherHitAnimation");
-            int damage = (int)(1.2 * playerStatus[0] + 10 + Random.Range(-3, 4));
+            int damage = (int)(1.2 * playerStatus[0] + 10 + Random.Range(0, 4));
             otherPlayerStatus.OtherPlayerDamaged(damage);
         }
     }
@@ -363,7 +363,7 @@ public class BattleManager : MonoBehaviour
         else
         {
             BroadcastMessage("PlayerHitAnimation");
-            int damage = (int)(0.9f * (otherPlayerStatus[0] - playerStatus[2]) - (0.5f * playerStatus[2]) + 10 + Random.Range(-3, 4));
+            int damage = (int)(0.9f * (otherPlayerStatus[0] - playerStatus[2]) - (0.5f * playerStatus[2]) + 10 + Random.Range(0, 4));
             playerStatus.PlayerDamaged(damage);
         }
     }
@@ -386,7 +386,7 @@ public class BattleManager : MonoBehaviour
         if (!canEvade)
         {
             BroadcastMessage("PlayerHitAnimation");
-            int damage = (int)(1.2 * otherPlayerStatus[0] + 10 + Random.Range(-3, 4));
+            int damage = (int)(1.2 * otherPlayerStatus[0] + 10 + Random.Range(0, 4));
             playerStatus.PlayerDamaged(damage);
         }
     }
