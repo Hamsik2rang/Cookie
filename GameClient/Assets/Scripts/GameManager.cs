@@ -41,22 +41,6 @@ public class GameManager : MonoBehaviour
         turnText.text = "Turn " + turnCount;
     }
 
-    public void SetInfoUI<T>(T objectParam, bool shellTurnItOn) where T : class
-    {
-        GameObject infoUI = GameObject.Find("Info");
-
-        if (objectParam == null)
-        {
-            infoUI.SetActive(false);
-        }
-
-        if (objectParam is PlayerStatus)
-        {
-            GameObject[] infomations = infoUI.GetComponentsInChildren<GameObject>();
-
-        }
-    }
-
     public void GameOver()
     {
         gameOverUI = GameObject.FindGameObjectsWithTag("GameoverUI");
