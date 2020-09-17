@@ -6,6 +6,7 @@ TagManager:
   tags:
   - OtherPlayer
   - SelectUI
+  - GameoverUI
   layers:
   - Default
   - TransparentFX
