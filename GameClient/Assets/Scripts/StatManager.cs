@@ -56,10 +56,10 @@ public class StatManager : MonoBehaviour
 
     private void Update()
     {
-        RefTexts();
 
         if(isStat == true)
         { 
+            //안태환 작
             while (StatPoint > 0)
             {
                 int randomStat = Random.Range(0, MAX_STAT + 1); //0 ~ MAX_STAT의 랜덤값
@@ -115,7 +115,7 @@ public class StatManager : MonoBehaviour
             {
                 skillText[i].text = skillStat[i].ToString();
             }
-
+            RefTexts();
             isStat = false;
             Debug.Log(isStat);
         }
