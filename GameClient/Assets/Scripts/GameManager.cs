@@ -54,8 +54,6 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("Intro Scene");
         }
-
-        //TODO: Get game result and statistics(player both's stat, attack routine, etc..) and parse to JSON
     }
 
     private void EndGame()  //Only called by Message passing
