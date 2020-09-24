@@ -19,6 +19,7 @@ public class PlayerStatus : MonoBehaviour, IStatus
 
     private int[] skill;
 
+    public Text GameOverText;
     public int this[int index]
     {
         get
@@ -104,6 +105,7 @@ public class PlayerStatus : MonoBehaviour, IStatus
         Debug.Log(hp);
         if (hp <= 0)
         {
+            GameOverText.text = "플레이어 사망";
             PlayerDead();
         }
         else if (hp > healthCircle.maxValue)

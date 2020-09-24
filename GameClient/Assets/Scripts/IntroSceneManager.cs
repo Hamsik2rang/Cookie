@@ -9,4 +9,11 @@ public class IntroSceneManager : MonoBehaviour
     {
         SceneManager.LoadScene("BattleScene");
     }
+
+    public void Load_IntroScene()
+    {
+        StatManager statManager = GameObject.Find("StatManager").GetComponent<StatManager>();
+        statManager.isStat = true;
+        SceneManager.LoadScene("IntroScene");
+    }
 }

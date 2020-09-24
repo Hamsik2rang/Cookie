@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     void Update()
@@ -43,12 +43,11 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        gameOverUI = GameObject.FindGameObjectsWithTag("GameoverUI");
+        //gameOverUI = GameObject.FindGameObjectsWithTag("GameoverUI");
+        GameObject.Find("Canvas").transform.FindChild("GameOverUI").gameObject.SetActive(true);
 
-        foreach (GameObject g in gameOverUI)    //Game Over UI Set
-        {
-            g.SetActive(true);
-        }
+        //Time.timeScale = 0;
+
 
         if (Input.GetKey(KeyCode.R))
         {
@@ -60,4 +59,5 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
+
 }

@@ -30,7 +30,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         actParam = new ActNumber?[2];
 

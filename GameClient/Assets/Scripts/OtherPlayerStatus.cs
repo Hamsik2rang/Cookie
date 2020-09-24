@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class OtherPlayerStatus : MonoBehaviour, IStatus
 {
+    public Text GameOverText;
     private Slider healthCircle;
     //근력
     private int strength;
@@ -122,6 +123,7 @@ public class OtherPlayerStatus : MonoBehaviour, IStatus
         Debug.Log(hp);
         if (hp <= 0)
         {
+            GameOverText.text = "적 사망";
             OtherPlayerDead();
         }
         else if (hp > healthCircle.maxValue)
