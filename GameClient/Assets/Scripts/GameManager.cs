@@ -49,18 +49,10 @@ public class GameManager : MonoBehaviour
         //Time.timeScale = 0;
 
 
-
-        //foreach (GameObject g in gameOverUI)    //Game Over UI Set
-        //{
-        //    g.SetActive(true);
-        //}
-
-        //if (Input.GetKey(KeyCode.R))
-        //{
-        //    SceneManager.LoadScene("Intro Scene");
-        //}
-
-        //TODO: Get game result and statistics(player both's stat, attack routine, etc..) and parse to JSON
+        if (Input.GetKey(KeyCode.R))
+        {
+            SceneManager.LoadScene("Intro Scene");
+        }
     }
 
     private void EndGame()  //Only called by Message passing
